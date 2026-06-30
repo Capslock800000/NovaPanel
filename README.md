@@ -14,6 +14,15 @@
 
 <table>
   <tr>
+    <td align="center" style="background-color: #ffebee; color: #48c628; padding: 12px; border-radius: 6px;">
+      <strong>🕰️ 最后更新时间:2026年06月30日</strong>
+    </td>
+  </tr>
+</table>
+
+
+<table>
+  <tr>
     <td align="center" style="background-color: #ffebee; color: #c62828; padding: 12px; border-radius: 6px;">
       <strong>⚠️ 注意：本项目目前为预览版（Preview），仍在积极开发中，部分功能可能不完善，欢迎反馈！</strong>
     </td>
