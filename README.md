@@ -13,10 +13,6 @@
 <strong>全 Go 栈 · 零依赖部署 · 为 Minecraft 和控制台应用而生</strong>
 </p>
 
-<p align="center">
-  <img src="images/users-2026-07-02.png" alt="NovaPanel Users Image" width="800">
-</p>
-
 > 轻量 · 高效 · 开箱即用的服务器管理面板（早期开发版）
 
 [![Preview](https://img.shields.io/badge/status-preview-orange.svg)]()
