@@ -24,7 +24,7 @@
 <table>
   <tr>
     <td align="center" style="background-color: #ffebee; color: #48c628; padding: 12px; border-radius: 6px;">
-      <strong>🕰️ 最后更新时间:2026年07月02日</strong>
+      <strong>🕰️ 最后更新时间:2026年07月09日</strong>
     </td>
   </tr>
 </table>
@@ -58,12 +58,12 @@ NovaPanel 致力于提供**轻量、高效、开箱即用**的管理体验，无
 
 ## ✨ 特性
 
-- 🚀 **轻量高效** - 基于 Go + Vue 构建，资源占用低
+- 🚀 **轻量高效** - 基于 Go 构建，资源占用低
 - 📦 **开箱即用** - 内置 Node.js 运行环境，无需手动安装
 - 🔌 **分布式架构** - 支持远程节点管理，可横向扩展
 - 🎮 **Minecraft 支持** - 专为 Minecraft 服务器优化
 - 🌐 **跨平台支持** - 支持 Windows / Linux
-- 🌐 **远程节点跨平台支持** - 支持 NovaPanel /MCSManager
+- 🌐 **远程节点跨平台支持** - 支持 NovaPanel /MCSManager daemon
 - 🔥 **热重载开发** - 修改代码自动刷新，开发体验流畅
 - 📊 **实时监控** - 系统信息总览，CPU/内存/磁盘实时监控
 - 🔐 **安全认证** - 账号密码登录，保障面板安全
@@ -74,7 +74,7 @@ NovaPanel 致力于提供**轻量、高效、开箱即用**的管理体验，无
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 前端 | Vue 2 | 现代化管理界面 |
+| 前端 | Go | 现代化管理界面 |
 | Web 后端 | Go | 高性能 Web 服务 |
 | 远程节点 | Go | 分布式节点管理 |
 | API 服务 | Node.js + Express | 数据接口 |
