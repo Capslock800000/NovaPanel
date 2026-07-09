@@ -14,48 +14,92 @@
 </p>
 
 <p align="center">
-<a href="#"><img src="https://img.shields.io/badge/status-alpha-orange.svg"></a>
-<a href="https://golang.org/"><img src="https://img.shields.io/badge/Go-1.26.4-00ADD8?logo=go"></a>
-<a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node-22.14.0-339933?logo=node.js"></a>
+  <img src="images/users-2026-07-02.png" alt="NovaPanel Users Image" width="800">
 </p>
 
-<blockquote>
-<details>
-<summary><strong>开始之前请看这里</strong></summary>
-<br>
+> 轻量 · 高效 · 开箱即用的服务器管理面板（早期开发版）
 
-- 本项目当前处于 <strong>Alpha</strong> 阶段，功能仍在持续开发中，部分特性尚不完善
-- 预览和开发环境请使用 <code>dev.bat</code> 启动
-- <code>run.bat</code> 可用于日常运行，但现阶段不建议依赖它用于生产环境
-- 最后更新：<strong>2026 年 7 月 9 日</strong>
+[![Preview](https://img.shields.io/badge/status-preview-orange.svg)]()
+[![Go Version](https://img.shields.io/badge/Go-1.26.4-00ADD8?logo=go)](https://golang.org/)
+[![Node Version](https://img.shields.io/badge/Node-22.14.0-339933?logo=node.js)](https://nodejs.org/)
 
-<br>
-如果遇到任何问题或有好想法，欢迎提 <a href="../../issues">Issue</a>，每一条反馈都有用！ </details>
-</blockquote>
+---
 
-关于 NovaPanel
-NovaPanel 是一款由 0721xun 开发的轻量级服务器管理面板，最初灵感来自 MCSManager，但在架构上走上了完全不同的路。
+<table>
+  <tr>
+    <td align="center" style="background-color: #ffebee; color: #48c628; padding: 12px; border-radius: 6px;">
+      <strong>🕰️ 最后更新时间:2026年07月02日</strong>
+    </td>
+  </tr>
+</table>
 
-它的目标很直接：让服务器管理这件事变得尽可能简单。无论你是要管理 Minecraft 服务器集群，还是需要统一管控各种控制台程序，NovaPanel 都希望做到下载、启动、上手，中间不需要任何多余的步骤。
 
-与大多数面板不同的是，NovaPanel 的前端和后端全部使用 Go 构建，从 Web 服务到页面渲染再到远程节点通信，整条链路由同一门语言贯穿。这个决定带来了几个显著的优势：单二进制分发成为可能，部署复杂度大幅降低，同时 Go 天然的高并发和低资源占用特性也让面板本身的运行开销小到可以忽略不计。
+<table>
+  <tr>
+    <td align="center" style="background-color: #ffebee; color: #c62828; padding: 12px; border-radius: 6px;">
+      <strong>⚠️ 注意：本项目目前为开发早期（alpha），仍在积极开发中，部分功能可能不完善，欢迎反馈！</strong>
+    </td>
+  </tr>
+</table>
 
-功能一览
-核心能力
-全 Go 技术栈 —— 前后端统一语言，编译即部署，不再为依赖头疼
-内置 Node.js —— 部分 API 服务需要 Node.js 运行时，已随项目打包，无需额外安装
-分布式节点管理 —— 支持连接多台远程机器，一个面板控制所有节点
-Minecraft 深度适配 —— 针对 MC 服务器的启动、监控和管理做了专门优化
-跨平台运行 —— Windows 和 Linux 均可部署
-MCSManager 节点兼容 —— 远程节点同时支持 NovaPanel 与 MCSManager 协议，无缝迁移
-热重载开发 —— 开发阶段修改代码后自动生效，无需手动重启
-实时系统监控 —— CPU、内存、磁盘状态实时刷新，掌握每台机器的健康状况
-账号密码认证 —— 基础但有效的安全机制，防止面板被未授权访问
+<table>
+  <tr>
+    <td align="center" style="background-color: #ffebee; color: #c6bb28; padding: 12px; border-radius: 6px;">
+      <strong>💡 Tips：预览 & 开发请点击dev.bat，日常使用请点击run.bat即可，但是未开发完善，不建议使用run.bat！</strong>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 📖 介绍
+
+这是来自作者 **0721xun** 编写的一个基于 **MCSManager** 的 **NovaPanel 轻量面板**，一款开箱即用的服务器管理面板，专为 **Minecraft 服务器**和**所有控制台程序**设计。
+
+NovaPanel 致力于提供**轻量、高效、开箱即用**的管理体验，无需复杂的配置，下载即用。
+
+---
+
+## ✨ 特性
+
+- 🚀 **轻量高效** - 基于 Go + Vue 构建，资源占用低
+- 📦 **开箱即用** - 内置 Node.js 运行环境，无需手动安装
+- 🔌 **分布式架构** - 支持远程节点管理，可横向扩展
+- 🎮 **Minecraft 支持** - 专为 Minecraft 服务器优化
+- 🌐 **跨平台支持** - 支持 Windows / Linux
+- 🌐 **远程节点跨平台支持** - 支持 NovaPanel /MCSManager
+- 🔥 **热重载开发** - 修改代码自动刷新，开发体验流畅
+- 📊 **实时监控** - 系统信息总览，CPU/内存/磁盘实时监控
+- 🔐 **安全认证** - 账号密码登录，保障面板安全
+
+---
+
+## 🛠️ 技术栈
+
+| 层级 | 技术 | 说明 |
+|------|------|------|
+| 前端 | Vue 2 | 现代化管理界面 |
+| Web 后端 | Go | 高性能 Web 服务 |
+| 远程节点 | Go | 分布式节点管理 |
+| API 服务 | Node.js + Express | 数据接口 |
+| 通信协议 | WebSocket | 实时双向通信 |
+
+---
+
+## 📦 快速开始
+
+### 环境要求
+
+- Windows 10/Windows Server 2022
+- **需要安装 Go**（推荐 1.21+）：https://golang.google.cn/dl/
+- **Node.js 已内置**，无需额外安装
+
+> ⚠️ 确保 Go 安装后已添加到系统 PATH（安装时勾选"Add to PATH"）
 
 ### 下载与启动
 
 ```bash
-# 克隆项目
+# 克隆项目（需要先Fork本仓库）
 git clone https://github.com/你的用户名/NovaPanel.git
 cd NovaPanel
 
