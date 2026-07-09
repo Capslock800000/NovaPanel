@@ -1,0 +1,15 @@
+{
+ "users": {
+  "zakoxun": {
+   "uuid": "2bb2bf22-11cb-4e9e-8087-69988ddf4c3c",
+   "username": "zakoxun",
+   "password": "zakoxun520",
+   "permission": 10,
+   "avatar": "zakoxun.png",
+   "email": "",
+   "bio": "",
+   "createdAt": "2026-06-30 20:26:21",
+   "lastLogin": "2026-07-08 02:48:36"
+  }
+ }
+}
