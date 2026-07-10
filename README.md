@@ -1,23 +1,16 @@
-# ✦ NovaPanel
-
 <p align="center">
-  <img src="images/login-2026-07-02.png" alt="NovaPanel Login Image" width="800">
+<img src="images/Panel-Light-2026-07-09.png" alt="Panel-Light" width="780">
 </p>
 
 <p align="center">
-  <img src="images/panel-2026-07-02.png" alt="NovaPanel Panel Image" width="800">
+<img src="images/Panel-Dark-2026-07-09.png" alt="Panel-Dark" width="780">
 </p>
 
-<p align="center">
-  <img src="images/quickstart-2026-07-02.png" alt="NovaPanel QuickStart Image" width="800">
-</p>
+
+<h1 align="center">NovaPanel</h1>
 
 <p align="center">
-  <img src="images/services-2026-07-02.png" alt="NovaPanel Services Image" width="800">
-</p>
-
-<p align="center">
-  <img src="images/users-2026-07-02.png" alt="NovaPanel Users Image" width="800">
+<strong>全 Go 栈 · 零依赖部署 · 为 Minecraft 和控制台应用而生</strong>
 </p>
 
 > 轻量 · 高效 · 开箱即用的服务器管理面板（早期开发版）
@@ -31,7 +24,7 @@
 <table>
   <tr>
     <td align="center" style="background-color: #ffebee; color: #48c628; padding: 12px; border-radius: 6px;">
-      <strong>🕰️ 最后更新时间:2026年07月02日</strong>
+      <strong>🕰️ 最后更新时间:2026年07月09日</strong>
     </td>
   </tr>
 </table>
@@ -40,7 +33,7 @@
 <table>
   <tr>
     <td align="center" style="background-color: #ffebee; color: #c62828; padding: 12px; border-radius: 6px;">
-      <strong>⚠️ 注意：本项目目前为开发早期（alpha），仍在积极开发中，部分功能可能不完善，欢迎提交issue进行反馈！</strong>
+      <strong>⚠️ 注意：本项目目前为开发早期（alpha），仍在积极开发中，部分功能可能不完善，欢迎反馈！</strong>
     </td>
   </tr>
 </table>
@@ -65,12 +58,12 @@ NovaPanel 致力于提供**轻量、高效、开箱即用**的管理体验，无
 
 ## ✨ 特性
 
-- 🚀 **轻量高效** - 基于 Go + Vue 构建，资源占用低
+- 🚀 **轻量高效** - 基于 Go 构建，资源占用低
 - 📦 **开箱即用** - 内置 Node.js 运行环境，无需手动安装
 - 🔌 **分布式架构** - 支持远程节点管理，可横向扩展
 - 🎮 **Minecraft 支持** - 专为 Minecraft 服务器优化
-- 🌐 **跨平台支持** - 支持 Windows / Linux
-- 🌐 **远程节点跨平台支持** - 支持 NovaPanel /MCSManager 格式的守护进程
+- 🌐 **跨平台支持** - 支持 Windows
+- 🌐 **远程节点跨平台支持** - 支持 NovaPanel / MCSManager daemon
 - 🔥 **热重载开发** - 修改代码自动刷新，开发体验流畅
 - 📊 **实时监控** - 系统信息总览，CPU/内存/磁盘实时监控
 - 🔐 **安全认证** - 账号密码登录，保障面板安全
@@ -81,7 +74,7 @@ NovaPanel 致力于提供**轻量、高效、开箱即用**的管理体验，无
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 前端 | Vue 2 | 现代化管理界面 |
+| 前端 | Go | 现代化管理界面 |
 | Web 后端 | Go | 高性能 Web 服务 |
 | 远程节点 | Go | 分布式节点管理 |
 | API 服务 | Node.js + Express | 数据接口 |
@@ -102,9 +95,12 @@ NovaPanel 致力于提供**轻量、高效、开箱即用**的管理体验，无
 ### 下载与启动
 
 ```bash
-# 克隆项目
+# 克隆项目（需要先Fork本仓库）
 git clone https://github.com/你的用户名/NovaPanel.git
 cd NovaPanel
 
-# 直接启动（Node.js 已内置）
+# 预览请直接启动（Node.js 已内置）
 dev.bat
+
+# 正常使用请直接启动（Node.js 已内置）
+run.bat

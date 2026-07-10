@@ -170,28 +170,84 @@
                 </div>
                 <div class="sidebar-footer">
                     <div class="user-info">
-                        <div class="user-avatar">{{ currentUser.charAt(0).toUpperCase() }}</div>
+                        <div class="user-avatar">
+                            <img v-if="profileAvatar" :src="profileAvatar" alt="头像" @error="profileAvatar = ''" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            <span v-else>{{ currentUser.charAt(0).toUpperCase() }}</span>
+                        </div>
                         <div style="flex:1">
                             <div class="user-name">{{ currentUser }}</div>
                             <div class="user-role">管理员</div>
                         </div>
-                        <button class="logout-btn" @click="logout">🚪</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 主内容区 -->
-            <div class="main-content">
-                <!-- 统一 top-bar：始终可见，不参与切换动画 -->
-                <div class="top-bar">
-                    <div class="page-title-box">
-                        <div class="page-title-info">
-                            <h1 class="page-title"><span class="title-prefix">控制面板 /</span> {{ pageTitle }}</h1>
-                            <div class="page-subtitle">{{ pageSubtitle }}</div>
+                <!-- 主内容区 -->
+                <div class="main-content">
+                    <!-- 刷新通知条：从顶部滑入 -->
+                    <transition name="refresh-toast">
+                        <div v-if="refreshToast.show" class="refresh-toast" :class="{ success: refreshToast.type === 'success' }">
+                            <span v-if="refreshToast.type === 'loading'" class="refresh-toast-spinner">⏳</span>
+                            <span v-else class="refresh-toast-icon">✅</span>
+                            <span>{{ refreshToast.message }}</span>
                         </div>
-                        <div v-if="currentPage === 'monitor'" class="hot-reload-status" :class="{ disconnected: !hotReloadConnected }">
-                            <span class="dot"></span>
-                            {{ hotReloadStatus }}
+                    </transition>
+
+                    <!-- 统一 top-bar：始终可见，不参与切换动画 -->
+                    <div class="top-bar">
+                    <div class="page-title-box">
+                        <div class="page-title-left">
+                            <div class="page-title-info">
+                                <h1 class="page-title"><span class="title-prefix">控制面板 /</span> {{ pageTitle }}</h1>
+                                <div class="page-subtitle">{{ pageSubtitle }}</div>
+                            </div>
+                            <div v-if="currentPage === 'monitor'" class="hot-reload-status" :class="{ disconnected: !hotReloadConnected }">
+                                <span class="dot"></span>
+                                {{ hotReloadStatus }}
+                            </div>
+                        </div>
+                        <div class="top-bar-actions">
+                            <!-- 主题切换 -->
+                            <div class="action-btn-wrap" @mouseenter="showThemeDropdown = true" @mouseleave="showThemeDropdown = false">
+                                <button class="top-action-btn" title="主题">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v1m0 16v1m-8-9H3m18 0h-1m-2.636-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707"/><circle cx="12" cy="12" r="4"/></svg>
+                                </button>
+                                <div class="action-tooltip">主题切换</div>
+                                <transition name="dropdown-fade">
+                                    <div v-if="showThemeDropdown" class="theme-dropdown">
+                                        <div class="theme-dropdown-title">外观模式</div>
+                                        <div class="theme-option" :class="{ active: currentTheme === 'light' }" @click="setTheme('light')">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                                            <span>浅色</span>
+                                            <svg v-if="currentTheme === 'light'" class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </div>
+                                        <div class="theme-option" :class="{ active: currentTheme === 'dark' }" @click="setTheme('dark')">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                                            <span>深色</span>
+                                            <svg v-if="currentTheme === 'dark'" class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </div>
+                                        <div class="theme-option" :class="{ active: currentTheme === 'auto' }" @click="setTheme('auto')">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                            <span>自动</span>
+                                            <svg v-if="currentTheme === 'auto'" class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </div>
+                                    </div>
+                                </transition>
+                            </div>
+                            <!-- 我的信息 -->
+                            <div class="action-btn-wrap">
+                                <button class="top-action-btn" title="我的信息" @click="switchPage('profile')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </button>
+                                <div class="action-tooltip">我的信息</div>
+                            </div>
+                            <!-- 退出 -->
+                            <div class="action-btn-wrap">
+                                <button class="top-action-btn power-btn" @click="logout" title="退出">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                                </button>
+                                <div class="action-tooltip">退出登录</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -427,7 +483,7 @@
                         <div class="section-desc">点击下方按钮添加一个新的远程节点，支持 NovaPanel 和 MCSManager 节点。</div>
                         <div style="display: flex; gap: 8px; margin-top: 12px;">
                             <button class="btn-add-node-modal" @click="showAddNodeModal = true">➕ 添加节点</button>
-                            <button class="btn-refresh-mini" @click="fetchNodes">🔄 刷新</button>
+                            <button class="btn-refresh-mini" @click="fetchNodes(true)">🔄 刷新</button>
                         </div>
                     </div>
 
@@ -603,6 +659,14 @@
                                         <input type="number" v-model="addNodeForm.port" placeholder="例如 8078">
                                         <div v-if="addNodeErrors.port" class="field-error">⚠️ {{ addNodeErrors.port }}</div>
                                     </div>
+                                    <div class="form-field">
+                                        <label>验证密钥 <span class="required">*</span></label>
+                                        <div class="field-desc">在远程节点启动时控制台上会输出显示，务必确保密钥安全</div>
+                                        <div class="field-hint"><a href="#" @click.prevent="showKeyHelp = !showKeyHelp">如何获取密钥？</a></div>
+                                        <div v-if="showKeyHelp" class="field-tip">💡 启动 NovaPanel Daemon 后，控制台会输出类似 "key: xxxxxxxx" 的信息，复制该密钥即可。</div>
+                                        <input type="text" v-model="addNodeForm.apiKey" placeholder="请输入验证密钥">
+                                        <div v-if="addNodeErrors.apiKey" class="field-error">⚠️ {{ addNodeErrors.apiKey }}</div>
+                                    </div>
                                 </div>
 
                                 <!-- MCSManager 表单 -->
@@ -670,55 +734,55 @@
 
                         <!-- 用户列表表格 -->
                         <div class="user-table-wrap">
-                            <table class="user-table">
+                            <table class="user-table" v-if="filteredUsers.length > 0">
                                 <thead>
                                     <tr>
-                                        <th class="col-check"><input type="checkbox" :checked="allSelected" @change="toggleSelectAll" /></th>
-                                        <th class="col-uuid">UUID</th>
-                                        <th class="col-name">用户名</th>
-                                        <th class="col-perm">权限等级</th>
-                                        <th class="col-created">注册时间</th>
-                                        <th class="col-login">最后登录</th>
-                                        <th class="col-edit">编辑</th>
-                                        <th class="col-res">分配资源</th>
-                                        <th class="col-op">操作</th>
+                                        <th class="user-th-check"><input type="checkbox" :checked="allSelected" @change="toggleSelectAll" /></th>
+                                        <th class="user-th-user">用户</th>
+                                        <th class="user-th-uuid">UUID</th>
+                                        <th class="user-th-time">注册时间</th>
+                                        <th class="user-th-time">最后登录</th>
+                                        <th class="user-th-action">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="u in pagedUsers" :key="u.uuid" :class="{ 'row-selected': selectedUsers.includes(u.username) }">
-                                        <td class="col-check"><input type="checkbox" :checked="selectedUsers.includes(u.username)" @change="toggleSelectUser(u.username)" /></td>
-                                        <td class="col-uuid" :title="u.uuid">
-                                            <span class="uuid-text">{{ u.uuid.substring(0, 8) }}<span class="uuid-tail">{{ u.uuid.substring(8) }}</span></span>
+                                    <tr v-for="u in pagedUsers" :key="u.uuid" class="user-row" :class="{ 'row-selected': selectedUsers.includes(u.username) }">
+                                        <td class="user-td-check"><input type="checkbox" :checked="selectedUsers.includes(u.username)" @change="toggleSelectUser(u.username)" /></td>
+                                        <td class="user-td-user">
+                                            <div class="user-cell-main">
+                                                <div class="user-cell-avatar">
+                                                    <img v-if="u.avatar" :src="'/api/avatar/' + u.avatar" alt="头像" @error="u.avatar = ''" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                                                    <span v-else>{{ u.username.charAt(0).toUpperCase() }}</span>
+                                                </div>
+                                                <div class="user-cell-info">
+                                                    <span class="user-cell-name">{{ u.username }}</span>
+                                                    <span class="perm-badge" :class="'perm-' + u.permission">{{ u.permName }}</span>
+                                                </div>
+                                            </div>
                                         </td>
-                                        <td class="col-name">
-                                            <span class="user-avatar">{{ u.username.charAt(0).toUpperCase() }}</span>
-                                            <span class="user-name">{{ u.username }}</span>
-                                        </td>
-                                        <td class="col-perm">
-                                            <span class="perm-badge" :class="'perm-' + u.permission">{{ u.permName }}</span>
-                                        </td>
-                                        <td class="col-created">{{ u.createdAt || '-' }}</td>
-                                        <td class="col-login">{{ u.lastLogin || '从未登录' }}</td>
-                                        <td class="col-edit">
-                                            <button class="btn-action btn-edit" @click="openEditUserModal(u)" title="编辑用户">✏️ 编辑</button>
-                                        </td>
-                                        <td class="col-res">
-                                            <button class="btn-action btn-res" @click="showToast('info', 'ℹ️', '资源分配功能开发中')" title="分配资源">📦 分配资源</button>
-                                        </td>
-                                        <td class="col-op">
-                                            <button class="btn-action btn-danger" @click="deleteSingleUser(u)" :disabled="u.permission === 10" :title="u.permission === 10 ? '管理员不可删除' : '删除用户'">🗑️</button>
-                                        </td>
-                                    </tr>
-                                    <tr v-if="filteredUsers.length === 0">
-                                        <td colspan="9" class="empty-row">
-                                            <div class="empty-users">
-                                                <div style="font-size: 40px; margin-bottom: 8px;">👤</div>
-                                                <div>{{ userSearch ? '未找到匹配的用户' : '暂无用户' }}</div>
+                                        <td class="user-td-uuid"><span class="uuid-text" :title="u.uuid">{{ u.uuid.substring(0, 16) }}...</span></td>
+                                        <td class="user-td-time">{{ u.createdAt || '-' }}</td>
+                                        <td class="user-td-time">{{ u.lastLogin || '从未登录' }}</td>
+                                        <td class="user-td-action">
+                                            <div class="user-row-actions">
+                                                <button class="btn-action btn-edit" @click="openEditUserModal(u)" title="编辑用户">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                                </button>
+                                                <button class="btn-action btn-res" @click="showToast('info', 'ℹ️', '资源分配功能开发中')" title="分配资源">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                                                </button>
+                                                <button class="btn-action btn-danger" @click="deleteSingleUser(u)" :disabled="u.permission === 10" :title="u.permission === 10 ? '管理员不可删除' : '删除用户'">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div v-if="filteredUsers.length === 0" class="empty-users">
+                                <div style="font-size: 40px; margin-bottom: 8px;">👤</div>
+                                <div>{{ userSearch ? '未找到匹配的用户' : '暂无用户' }}</div>
+                            </div>
                         </div>
 
                         <!-- 分页 -->
@@ -812,6 +876,123 @@
                     </div>
                 </div>
 
+                <!-- 个人信息页（三列卡片布局） -->
+                <div v-if="currentPage === 'profile' && !pageLoading" class="page-enter profile-page">
+                    <!-- 第一行：三列卡片 -->
+                    <div class="profile-grid">
+                        <!-- 基本信息 -->
+                        <div class="mcsm-card">
+                            <div class="mcsm-card-title">
+                                <span class="mcsm-title-bar"></span>
+                                基本信息
+                            </div>
+                            <div class="mcsm-card-body">
+                                <table class="mcsm-info-table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="mcsm-info-label">UUID</td>
+                                            <td class="mcsm-info-value mcsm-uuid-cell">
+                                                <span class="mcsm-uuid-text">{{ currentUserUuid || '加载中...' }}</span>
+                                                <button class="mcsm-copy-btn" @click="copyToClipboard(currentUserUuid)" title="复制">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mcsm-info-label">用户名</td>
+                                            <td class="mcsm-info-value">{{ currentUser }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mcsm-info-label">权限等级</td>
+                                            <td class="mcsm-info-value"><span class="mcsm-perm-badge">10（最高权限）</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mcsm-info-label">注册时间</td>
+                                            <td class="mcsm-info-value">{{ currentUserCreated || '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mcsm-info-label">最后登录</td>
+                                            <td class="mcsm-info-value">{{ currentUserLastLogin || '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="mcsm-info-label">账号状态</td>
+                                            <td class="mcsm-info-value"><span class="mcsm-status-ok">账号正常</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 头像设置 -->
+                        <div class="mcsm-card">
+                            <div class="mcsm-card-title">
+                                <span class="mcsm-title-bar"></span>
+                                头像设置
+                            </div>
+                            <div class="mcsm-card-body mcsm-avatar-section">
+                                <div class="mcsm-avatar-preview">
+                                    <div class="mcsm-avatar-img">
+                                        <img v-if="profileAvatar" :src="profileAvatar" alt="头像" @error="profileAvatar = ''">
+                                        <span v-else class="mcsm-avatar-fallback">{{ currentUser.charAt(0).toUpperCase() }}</span>
+                                    </div>
+                                    <div class="mcsm-avatar-actions">
+                                        <button class="mcsm-btn mcsm-btn-primary" @click="changeAvatar">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                            上传新头像
+                                        </button>
+                                        <p class="mcsm-avatar-hint">支持 JPG、PNG、GIF，最大 2MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 注意事项 -->
+                        <div class="mcsm-card">
+                            <div class="mcsm-card-title">
+                                <span class="mcsm-title-bar"></span>
+                                注意事项
+                            </div>
+                            <div class="mcsm-card-body">
+                                <div class="mcsm-notice">
+                                    <p><strong>关于用户名：</strong>用户名是您在面板中的唯一标识，注册后不可更改。请妥善保管您的账号信息。</p>
+                                </div>
+                                <div class="mcsm-notice" style="margin-top: 12px;">
+                                    <p><strong>关于密码安全：</strong>建议使用包含大小写字母、数字和特殊字符的强密码，且定期更换密码以确保账号安全。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二行：更新密码（居中单卡） -->
+                    <div class="profile-grid-bottom">
+                        <div class="mcsm-card">
+                            <div class="mcsm-card-title">
+                                <span class="mcsm-title-bar"></span>
+                                更新密码
+                            </div>
+                            <div class="mcsm-card-body mcsm-pw-body">
+                                <div class="mcsm-pw-form">
+                                    <div class="mcsm-form-group">
+                                        <label class="mcsm-form-label">原密码</label>
+                                        <input type="password" v-model="profileOldPass" class="mcsm-input" placeholder="请输入原密码" autocomplete="current-password">
+                                    </div>
+                                    <div class="mcsm-form-group">
+                                        <label class="mcsm-form-label">新密码</label>
+                                        <input type="password" v-model="profileNewPass" class="mcsm-input" placeholder="至少6位，包含大小写字母和数字" autocomplete="new-password">
+                                    </div>
+                                    <div class="mcsm-form-group">
+                                        <label class="mcsm-form-label">确认新密码</label>
+                                        <input type="password" v-model="profileConfirmPass" class="mcsm-input" placeholder="请再次输入新密码" autocomplete="new-password">
+                                    </div>
+                                </div>
+                                <div class="mcsm-pw-action">
+                                    <button class="mcsm-btn mcsm-btn-danger" @click="updateProfilePassword">更新密码</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -844,13 +1025,169 @@
                     quickstart: { title: '快速开始', subtitle: '快速了解面板功能与使用指南' },
                     nodes: { title: '节点管理', subtitle: '添加、删除、监控远程节点连接状态' },
                     users: { title: '用户管理', subtitle: '管理面板用户和权限' },
-                    settings: { title: '设置', subtitle: '面板系统配置和优化' }
+                    settings: { title: '设置', subtitle: '面板系统配置和优化' },
+                    profile: { title: '个人信息', subtitle: '查看和修改您的个人资料与安全设置' }
                 };
                 const pageTitle = computed(() => (pageMeta[currentPage.value] || pageMeta.monitor).title);
                 const pageSubtitle = computed(() => (pageMeta[currentPage.value] || pageMeta.monitor).subtitle);
 
                 const currentUser = ref('Admin');
-                
+
+                // ===== 主题系统 =====
+                const currentTheme = ref(localStorage.getItem('novapanel-theme') || 'dark');
+                const showThemeDropdown = ref(false);
+                const appliedTheme = ref(currentTheme.value === 'auto'
+                    ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+                    : currentTheme.value);
+
+                const applyThemeClass = (theme) => {
+                    const t = theme === 'auto'
+                        ? (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+                        : theme;
+                    appliedTheme.value = t;
+                    document.documentElement.setAttribute('data-theme', t);
+                };
+
+                const setTheme = (theme) => {
+                    currentTheme.value = theme;
+                    localStorage.setItem('novapanel-theme', theme);
+                    applyThemeClass(theme);
+                    showThemeDropdown.value = false;
+                };
+
+                // 监听系统主题变化（auto 模式下）
+                window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+                    if (currentTheme.value === 'auto') applyThemeClass('auto');
+                });
+                applyThemeClass(currentTheme.value);
+
+                // ===== 个人信息面板 =====
+                const showProfilePanel = ref(false);
+                const profileAvatar = ref('');
+                // 初始化头像：使用后端 session 返回的 avatar 字段，回退 localStorage
+                const initAvatar = (serverAvatarUrl) => {
+                    if (serverAvatarUrl) {
+                        profileAvatar.value = serverAvatarUrl + '?t=' + Date.now();
+                    } else {
+                        // 兼容旧版：localStorage 里的 base64
+                        const local = localStorage.getItem('novapanel-avatar');
+                        if (local) profileAvatar.value = local;
+                    }
+                };
+                const currentUserUuid = ref('');
+                const currentUserCreated = ref('');
+                const currentUserLastLogin = ref('');
+
+                const fetchCurrentUserInfo = async () => {
+                    try {
+                        const res = await fetch('/api/user/list');
+                        const data = await res.json();
+                        if (data.success && Array.isArray(data.data)) {
+                            const me = data.data.find(u => u.username === currentUser.value);
+                            if (me) {
+                                currentUserUuid.value = me.uuid || '';
+                                currentUserCreated.value = me.createdAt || '';
+                                currentUserLastLogin.value = me.lastLogin || '';
+                            }
+                        }
+                    } catch (e) {
+                        console.error('获取用户信息失败:', e);
+                    }
+                };
+
+                const profileOldPass = ref('');
+                const profileNewPass = ref('');
+                const profileConfirmPass = ref('');
+
+                const updateProfilePassword = () => {
+                    if (!profileOldPass.value) {
+                        showToast('error', '⚠️', '请输入原密码'); return;
+                    }
+                    if (profileNewPass.value.length < 6) {
+                        showToast('error', '⚠️', '新密码至少需要6位'); return;
+                    }
+                    if (!/[A-Z]/.test(profileNewPass.value) || !/[a-z]/.test(profileNewPass.value) || !/[0-9]/.test(profileNewPass.value)) {
+                        showToast('error', '⚠️', '新密码必须包含大小写字母和数字'); return;
+                    }
+                    if (profileNewPass.value !== profileConfirmPass.value) {
+                        showToast('error', '⚠️', '两次输入的新密码不一致'); return;
+                    }
+                    fetch('/api/user/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: currentUser.value,
+                            password: profileNewPass.value,
+                            oldPassword: profileOldPass.value,
+                            updatePass: true
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('success', '✅', '密码更新成功');
+                            profileOldPass.value = '';
+                            profileNewPass.value = '';
+                            profileConfirmPass.value = '';
+                        } else {
+                            showToast('error', '⚠️', data.message || '密码更新失败');
+                        }
+                    })
+                    .catch(() => {
+                        showToast('error', '❌', '网络错误，请重试');
+                    });
+                };
+
+                const changeAvatar = () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'image/jpeg,image/png,image/gif,image/webp';
+                    input.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        if (file.size > 2 * 1024 * 1024) {
+                            showToast('error', '⚠️', '头像图片不能超过 2MB');
+                            return;
+                        }
+                        // 上传到服务器
+                        const formData = new FormData();
+                        formData.append('avatar', file);
+                        formData.append('username', currentUser.value);
+                        try {
+                            const res = await fetch('/api/avatar/upload', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const data = await res.json();
+                            if (data.success) {
+                                // 加时间戳防缓存
+                                profileAvatar.value = data.avatar + '?t=' + Date.now();
+                                // 清除旧的 localStorage 头像数据
+                                localStorage.removeItem('novapanel-avatar');
+                                showToast('success', '✅', '头像已更新并保存到服务器');
+                            } else {
+                                showToast('error', '⚠️', data.message || '上传失败');
+                            }
+                        } catch (err) {
+                            console.error('头像上传失败:', err);
+                            showToast('error', '❌', '网络错误，上传失败');
+                        }
+                    };
+                    input.click();
+                };
+
+                // 刷新通知条
+                const refreshToast = ref({ show: false, type: 'loading', message: '' });
+                let refreshToastTimer = null;
+                const showRefreshToast = (type, message, duration = 2000) => {
+                    if (refreshToastTimer) clearTimeout(refreshToastTimer);
+                    refreshToast.value = { show: true, type, message };
+                    refreshToastTimer = setTimeout(() => {
+                        refreshToast.value.show = false;
+                        refreshToastTimer = null;
+                    }, duration);
+                };
+
                 // Toast
                 const toast = ref({ show: false, type: 'success', emoji: '✅', message: '成功' });
                 const showToast = (type, emoji, message) => {
@@ -908,8 +1245,8 @@
                         if (data.success) {
                             currentUser.value = data.user.username;
                             page.value = 'dashboard';
-                        } else {
-                            showToast('error', '❌', data.message || '登录失败');
+                            fetchCurrentUserInfo();
+                            initAvatar(data.user.avatar || '');
                         }
                     })
                     .catch(() => {
@@ -977,11 +1314,9 @@
                         addNodeErrors.value.port = '端口范围 1-65535';
                         hasError = true;
                     }
-                    if (nodeType.value === 'mcsmanager') {
-                        if (!addNodeForm.value.apiKey || !addNodeForm.value.apiKey.trim()) {
-                            addNodeErrors.value.apiKey = '验证密钥不能为空';
-                            hasError = true;
-                        }
+                    if (!addNodeForm.value.apiKey || !addNodeForm.value.apiKey.trim()) {
+                        addNodeErrors.value.apiKey = '验证密钥不能为空';
+                        hasError = true;
                     }
                     if (hasError) return;
                     // 调用后端 API 添加节点
@@ -994,7 +1329,7 @@
                                 port: parseInt(addNodeForm.value.port),
                                 name: addNodeForm.value.remark.trim() || addNodeForm.value.ip.trim(),
                                 type: nodeType.value,
-                                apiKey: nodeType.value === 'mcsmanager' ? addNodeForm.value.apiKey.trim() : ''
+                                apiKey: addNodeForm.value.apiKey.trim()
                             })
                         });
                         const data = await res.json();
@@ -1082,7 +1417,8 @@
                         showToast('error', '⚠️', '网络错误: ' + e.message);
                     }
                 };
-                const fetchNodes = async () => {
+                const fetchNodes = async (showHint = false) => {
+                    if (showHint) showRefreshToast('loading', '🔄 正在刷新节点列表...');
                     try {
                         const res = await fetch('/api/nodes');
                         const data = await res.json();
@@ -1093,6 +1429,7 @@
                                 n.editPort = n.port;
                             });
                             nodes.value = data;
+                            if (showHint) showRefreshToast('success', '✅ 节点列表已刷新');
                         }
                     } catch (e) {
                         console.error('获取节点列表失败:', e);
@@ -1177,6 +1514,8 @@
                                 // 登录后加载数据
                                 fetchSysInfo();
                                 fetchNodes();
+                                fetchCurrentUserInfo();
+                                initAvatar(data.user.avatar || '');
                             } else {
                                 // 未登录：根据是否已有用户决定显示安装引导还是登录页
                                 return fetch('/api/install-status')
@@ -1409,10 +1748,13 @@
 
                 return {
                     appVisible, page, currentPage, pageLoading, switchPage, pageTitle, pageSubtitle, goTo,
-                    toast,
+                    toast, refreshToast,
                     regUsername, regPassword, showRegPassword, creating, isUsernameValid, isPasswordValid, createAdmin,
                     loginUsername, loginPassword, showLoginPassword, loggingIn, login,
                     currentUser, logout,
+                    currentTheme, showThemeDropdown, setTheme, appliedTheme,
+                    showProfilePanel, profileAvatar, initAvatar, currentUserUuid, currentUserCreated, currentUserLastLogin, changeAvatar,
+                    profileOldPass, profileNewPass, profileConfirmPass, updateProfilePassword,
                     hotReloadConnected, hotReloadStatus, currentTime, sysInfo, fetchSysInfo,
                     nodes, totalNodes, onlineNodes, totalInstances, runningInstances,
                     showAddNodeModal, nodeType, addNodeForm, addNodeErrors, showKeyHelp,

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "node2",
+    "name": "novepanel daemon1",
+    "ip": "127.0.0.1",
+    "port": 8079,
+    "type": "novapanel",
+    "apiKey": "",
+    "version": "1.0.0",
+    "status": "connecting",
+    "platform": "",
+    "daemonId": "",
+    "cpu": 0,
+    "memUsed": 0,
+    "memTotal": 15.999469757080078,
+    "memPercent": 0,
+    "running": 0,
+    "total": 0,
+    "lastUpdate": "2026-07-08 02:29:33",
+    "cpuHistory": [],
+    "memHistory": []
+  }
+]
